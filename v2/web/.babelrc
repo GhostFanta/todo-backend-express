@@ -1,0 +1,8 @@
+{
+  "presets": [
+    "es2015"
+  ],
+  "scripts": {
+    "build": "babel --presets es2015 -d lib/ src"
+  }
+}

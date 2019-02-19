@@ -1,0 +1,14 @@
+{
+  "title": "list1",
+  "userid": "5c6c3af7938cf92034b31831",
+  "todos": [
+    {
+      "content": "todo1",
+      "completed":false
+    },
+    {
+      "content": "todo2",
+      "completed":false
+    }
+  ]
+}
