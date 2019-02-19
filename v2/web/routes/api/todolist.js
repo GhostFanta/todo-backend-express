@@ -2,7 +2,7 @@ const router = require('express').Router();
 const TodoList = require('../../models/TodoList');
 
 // get todolists for dashboard
-router.get('/', (req, res) => {
+router.get('/', (req, res, next) => {
   TodoList.find({}).then((docs) => {
     res.status(200).send(docs);
   }, (err) => {
