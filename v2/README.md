@@ -15,6 +15,7 @@
 ## Toturial
 #### Install dependencies
 ```angular2html
+cd web
 yarn install
 ```
 #### Run e2e test

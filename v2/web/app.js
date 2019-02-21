@@ -7,9 +7,11 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const { ObjectId } = require('mongodb');
 
+console.log(process.env.PORT);
+console.log(process.env.MONGODB_URI);
+
 mongoose.connect(process.env.MONGODB_URI);
 
-console.log(process.env.PORT);
 
 const app = express();
 app.use(bodyParser.json());

@@ -2,15 +2,29 @@ version: "2"
 services:
   web:
     build: ./web/
+    image: todo/web
+    container_name: todo_web
     links:
-      - data
+      - mongo
     ports:
       - 3000:3000
-    volumes:
-      - .:/home/todo-backend-express
     depends_on:
-      - data
-  data:
+      - mongo
+  mongo:
     image: mongo
+    container_name: todo_mogo
     ports:
     - 27017:27017
+  nginx:
+    image: nginx
+    container_name: todo_nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/proxy.conf:/etc/nginx/proxy.conf:ro
+      - ./nginx/fastcgi.conf:/etc/nginx/fastcgi.conf:ro
+      - ./nginx/mime.types:/etc/nginx/mime.types:ro
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - web
