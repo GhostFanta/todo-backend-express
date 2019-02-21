@@ -1,16 +1,40 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+require('./config/config');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 
-mongoose.connect('mongodb://localhost:27017/TodoApp');
+const User = require('./models/User');
+const { ObjectId } = require('mongodb');
 
-var TodoList = require('./models/TodoList');
-var User = require('./models/User');
+mongoose.connect(process.env.MONGODB_URI);
 
-var app = express();
+console.log(process.env.PORT);
+
+const app = express();
 app.use(bodyParser.json());
 app.use(require('./routes'));
 
-var server = app.listen(3000, function () {
-  console.log('Listen on port: ' + server.address().port);
+const userid = new ObjectId();
+const user = new User({
+  _id: userid,
+  email: 'admin@admin.com',
+  username: 'admin',
+  password: '123456',
+  tokens: [
+    {
+      access: 'auth',
+      token: jwt.sign({ _id: userid, access: 'auth' }, process.env.JWT_SECRET).toString(),
+    },
+  ],
 });
+
+user.save();
+
+const { PORT } = process.env;
+
+const server = app.listen(PORT, () => {
+  console.log(`Listen on port: ${server.address().port}`);
+});
+
+module.exports = app;

@@ -1,9 +1,10 @@
 const router = require('express').Router();
 const TodoList = require('../../models/TodoList');
+const authenticate = require('../../middleware/auth');
 
-// get todolists for dashboard
-router.get('/', (req, res, next) => {
-  TodoList.find({}).then((docs) => {
+// get todolists for the dashboard
+router.get('/', authenticate, (req, res, next) => {
+  TodoList.find({ userid: req.user._id }).then((docs) => {
     res.status(200).send(docs);
   }, (err) => {
     res.status(404).send(err);
@@ -11,8 +12,8 @@ router.get('/', (req, res, next) => {
 });
 
 // get info of a certain todolist
-router.get('/todolist/:todolistid', (req, res, next) => {
-  TodoList.find({_id: req.parmas.todolistid}).then((docs) => {
+router.get('/todolist/:todolistid', authenticate, (req, res, next) => {
+  TodoList.findOne({ _id: req.params.todolistid }).then((docs) => {
     res.status(200).send(docs);
   }, (err) => {
     res.status(500).send(err);
@@ -20,9 +21,9 @@ router.get('/todolist/:todolistid', (req, res, next) => {
 });
 
 // creat a new todolist
-router.post('/createnewlist', (req, res, next) => {
+router.post('/createnewlist', authenticate, (req, res, next) => {
   const todoList = new TodoList(
-    req.body
+    req.body,
   );
 
   todoList.save().then((doc) => {
@@ -32,14 +33,17 @@ router.post('/createnewlist', (req, res, next) => {
   }).catch(next);
 });
 
-// update the title or todos of a todolist
-router.put('/todolist/', (req, res, next) => {
-  TodoList.findOneAndUpdate({_id: req.body.todolistid}, {
+// PUT /todolist: update the title or todos of a todolist identified by todolistid and userid
+router.put('/todolist/', authenticate, (req, res, next) => {
+  TodoList.findOneAndUpdate({ _id: req.body.todolistid, userid: req.user._id }, {
     $set: {
       title: req.body.title,
-      todos: req.body.todos
-    }
+      todos: req.body.todos,
+    },
   }).then((doc) => {
+    if (!doc) {
+      res.status(404).send();
+    }
     res.status(202).send(doc);
   }, (err) => {
     res.status(500).send(err);
@@ -47,8 +51,8 @@ router.put('/todolist/', (req, res, next) => {
 });
 
 // delete a todolist
-router.delete('/todolist/', (req, res, next) => {
-  TodoList.deleteOne({_id: req.body.todolistid}).then((doc) => {
+router.delete('/todolist/', authenticate, (req, res, next) => {
+  TodoList.deleteOne({ _id: req.body.todolistid, userid: req.user._id }).then((doc) => {
     res.status(202).send(doc);
   }, (err) => {
     res.status(500).send(err);

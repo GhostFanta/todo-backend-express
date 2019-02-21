@@ -2,18 +2,18 @@ const mongoose = require('mongoose');
 const mongodb = require('mongodb');
 
 const TodoListSchema = mongoose.Schema({
-  title: {type: String},
-  userid: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  title: { type: String },
+  userid: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   todos: [{
     todoid: mongodb.ObjectId,
     content: String,
-    completed: Boolean
-  }]
+    completed: Boolean,
+  }],
 }, {
   timestamp: {
     createdAt: 'created',
-    modifiedAt: 'modified'
-  }
+    modifiedAt: 'modified',
+  },
 });
 
 module.exports = mongoose.model('TodoList', TodoListSchema);

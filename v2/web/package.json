@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
+    "mochatest":"export NODE_ENV=test || SET NODE_ENV=test && mocha ./tests/*.test.js",
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
     "mongo:start": "docker run --name dev-mongo -d mongo:4.0.6-xenial",
     "mongo:end": "docker stop dev-mongo && docker rm dev-mongo"
@@ -25,17 +26,27 @@
   },
   "homepage": "https://github.com/GhostFanta/todo-backend-express#readme",
   "dependencies": {
+    "babel-eslint": "^10.0.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "crypto-js": "^3.1.9-1",
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
     "expect": "^24.1.0",
     "express": "^4.16.4",
     "express-jwt": "^5.3.1",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
     "mocha": "^5.2.0",
     "mongodb": "^3.1.13",
     "mongoose": "^5.4.11",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "request": "^2.88.0",
-    "supertest": "^3.4.2"
+    "supertest": "^3.4.2",
+    "swagger-ui-express": "^4.0.2",
+    "validator": "^10.11.0"
   },
   "devDependencies": {
     "newman": "^4.3.1",
