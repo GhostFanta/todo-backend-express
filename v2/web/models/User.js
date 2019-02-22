@@ -84,9 +84,13 @@ UserSchema.statics.findByToken = function (token) {
 
 UserSchema.statics.findByCredentials = function (email, password) {
   const User = this;
+  console.log(email);
+  console.log(password);
+
 
   return User.findOne({ email }).then((user) => {
     if (!user) {
+      console.log(`user with ${email} does not exist`);
       return Promise.reject();
     }
 
@@ -95,6 +99,7 @@ UserSchema.statics.findByCredentials = function (email, password) {
         if (res) {
           resolve(user);
         } else {
+          console.log('password not match');
           reject();
         }
       });

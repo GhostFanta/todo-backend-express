@@ -34,7 +34,7 @@ router.put('/', authenticate, (req, res, next) => {
 
 // POST /user/login: user login
 router.post('/login', (req, res, next) => {
-  const { email, password } = _.pick(req.body, ['email', 'passworcd']);
+  const { email, password } = _.pick(req.body, ['email', 'password']);
   User.findByCredentials(email, password).then(user => user.generateAuthToken().then((token) => {
     res.header('x-auth', token).status(200).send(user);
   }), (err) => {
