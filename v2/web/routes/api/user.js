@@ -25,10 +25,23 @@ router.post('/', (req, res, next) => {
 
 // PUT /user: update the info of a user
 router.put('/', authenticate, (req, res, next) => {
-  User.findOneAndUpdate().then((user) => {
-    res.status(202).send(user);
-  }, (err) => {
-    res.status(500).send(err);
+  const { _id } = req.user;
+  User.findById({ _id }).then((user) => {
+    const { email, username, bio } = req.body;
+    if (email) {
+      user.email = email;
+    }
+    if (username) {
+      user.username = username;
+    }
+    if (bio) {
+      user.bio = bio;
+    }
+    user.save().then((doc) => {
+      res.status(202).send(doc);
+    }, (err) => {
+      res.status(500).send(err);
+    });
   }).catch(next);
 });
 
@@ -44,7 +57,7 @@ router.post('/login', (req, res, next) => {
 
 // DELETE /user/logout: user logout
 router.delete('/logout', authenticate, (req, res, next) => {
-  const token = req.token;
+  const { token } = req;
   User.findByToken(token).then((user) => {
     user.removeToken(token);
     res.status(204).send(token);
