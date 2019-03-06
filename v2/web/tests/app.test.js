@@ -74,7 +74,7 @@ describe('GET /user', () => {
   });
 });
 
-describe('POST /createnewlist', () => {
+describe('POST /todolist', () => {
   it('should create a new todolist', (done) => {
     const user = users[2];
     const userid = user._id.toString();
@@ -94,7 +94,7 @@ describe('POST /createnewlist', () => {
     };
 
     request(app)
-      .post('/createnewlist')
+      .post('/todolist')
       .set('x-auth', user.tokens[0].token)
       .send(list1)
       .expect(201)

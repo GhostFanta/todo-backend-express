@@ -1,0 +1,158 @@
+swagger: "2.0"
+info:
+  description: "Open API for todolist"
+  version: "1.0.0"
+  title: "Todolist, better management"
+basePath: "/"
+schemes:
+  - "http"
+paths:
+  /:
+    get:
+      tags:
+        - "Todolist"
+      summary: "Get all todolist of a user"
+      operationId: "/"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Todolist"
+
+  /todolist/{listid}:
+    get:
+      tags:
+        - "Todolist"
+      summary: "Get todolist according to id"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/Todolist"
+        404:
+          description: "Not Found"
+        500:
+          description: "Internal Server Error"
+    post:
+      tags:
+        - "Todolist"
+      summary: "Create new todolist"
+      operationId: "/createnewlist"
+      produces:
+      - "application/json"
+      responses:
+        201:
+          description: "created"
+          schema:
+            $ref: "#/definition/Todolist"
+    put:
+      tags:
+        - "Todolist"
+      summary: "Update todolist by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        202:
+          description: "todolist updated"
+          schema:
+            $ref: "#/definition/Todolist"
+        404:
+          description: "Not Found"
+
+    delete:
+      tags:
+        - "Todolist"
+      summary: "Delete todolist by id"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        204:
+          description: "Delete Successful"
+          schema:
+            $ref: "#/definition/Todolist"
+        404:
+          description: "Not Found"
+
+  /login:
+    post:
+      tags:
+        - "User"
+      description: "Login according to email and password, return jwt in response header"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        200:
+          description: "Successfully login, return jwt in header"
+          schema:
+            $ref: "#/definition/User"
+  /signup:
+    post:
+      tags:
+        - "User"
+      description: "Create new user based on email and password"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        201:
+          description: "Successfully created"
+          schema:
+            $ref: "#/definition/User"
+        500:
+          description: "Internal Server Error"
+  /logout:
+    delete:
+      tags:
+        - "User"
+      description: "Remove jwt token according to jwt token in the request header"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+
+      responses:
+        204:
+          description: "Successfully created"
+          schema:
+            $ref: "#/definition/User"
+        500:
+          description: "Internal Server Error"
+
+definitions:
+  Todolist:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      todos:
+        type: "object"
+      created:
+        type: "date"
+      modified:
+        type: "date"
+  User:
+    type: "object"
+    properties:
+      emai:
+        type: "string"
+      password:
+        type: "string"
+      username:
+        type: "string"
+      bio:
+        type: "string"
+      tokens:
+        type: "array"
+        description: "An array of tokens used for jwt authentication"
+

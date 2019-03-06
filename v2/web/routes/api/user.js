@@ -5,8 +5,12 @@ const User = require('../../models/User');
 
 // GET /user: get info of a user
 router.get('/', authenticate, (req, res) => {
-  const { user } = req.user;
-  res.status(200).send(user);
+  const { _id } = req.user;
+  User.findById({ _id }).then((user) => {
+    res.status(200).send(user);
+  }).catch((err) => {
+    res.status(500).send(err);
+  });
 });
 
 // POST /user :create a new user
@@ -49,7 +53,7 @@ router.put('/', authenticate, (req, res, next) => {
 router.post('/login', (req, res, next) => {
   const { email, password } = _.pick(req.body, ['email', 'password']);
   User.findByCredentials(email, password).then(user => user.generateAuthToken().then((token) => {
-    res.header('x-auth', token).status(200).send(user);
+    res.header('x-auth', token).status(200).send({ ...user, token });
   }), (err) => {
     res.status(404).send(err);
   }).catch(next);

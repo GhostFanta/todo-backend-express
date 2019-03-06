@@ -1,11 +1,19 @@
 const router = require('express').Router();
+const _ = require('lodash');
 const TodoList = require('../../models/TodoList');
 const authenticate = require('../../middleware/auth');
 
 // get todolists for the dashboard
 router.get('/', authenticate, (req, res, next) => {
   TodoList.find({ userid: req.user._id }).then((docs) => {
-    res.status(200).send(docs);
+    const content = docs.map(doc => _.pick(doc, ['_id', 'title', 'todos', 'createdAt', 'modifiedAt']));
+    content.map((ele) => {
+      ele.todos = ele.todos.reduce((obj, item) => {
+        obj[item._id] = item;
+        return obj;
+      }, {});
+    });
+    res.status(200).send(content);
   }, (err) => {
     res.status(404).send(err);
   }).catch(next);
@@ -21,7 +29,7 @@ router.get('/todolist/:todolistid', authenticate, (req, res, next) => {
 });
 
 // creat a new todolist
-router.post('/createnewlist', authenticate, (req, res, next) => {
+router.post('/todolist', authenticate, (req, res, next) => {
   const todoList = new TodoList(
     req.body,
   );
